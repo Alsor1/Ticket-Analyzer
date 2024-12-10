@@ -4,16 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plane Ticket Analyzer</title>
+    <link rel="stylesheet" href="style/style.css">
 </head>
 <body>
-    <div>
-        <h1>Plane Ticket Analyzer</h1>
+    <h1>Plane Ticket Analyzer</h1>
+
+    <div class="container">
+        <h2>What flight would you like to analyze?</h2>
+        <form id="ticket-form">
+            <!-- Departure Information Group -->
+            <fieldset class="form-group">
+                <legend>Departure Information</legend>
+                <label for="origin">Departure Airport:</label>
+                <input type="text" id="origin" name="origin" placeholder="Enter departure airport" required>
+
+                <label for="departure-date">Departure Date:</label>
+                <input type="date" id="departure-date" name="departure-date" required>
+            </fieldset>
+
+            <!-- Arrival Information Group -->
+            <fieldset class="form-group">
+                <legend>Arrival Information</legend>
+                <label for="destination">Destination Airport:</label>
+                <input type="text" id="destination" name="destination" placeholder="Enter destination airport" required>
+
+                <label for="arrival-date">Arrival Date:</label>
+                <input type="date" id="arrival-date" name="arrival-date" required>
+            </fieldset>
+
+            <input type="submit" value="Analyze">
+        </form>
+
+        <!-- Output Section -->
+        <div id="result" class="result">
+            <!-- This section will display the best ticket information dynamically -->
+        </div>
     </div>
 
-    <div>
-        <h2>What flight would you like to analyze?</h2>
-    </div>
-    
-    
+    <script src="script/script.js"></script>
 </body>
 </html>
