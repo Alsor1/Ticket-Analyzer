@@ -1,56 +1,23 @@
-easyJet,09:50,11:40,1356
-easyJet,21:20,23:10,956
-easyJet,21:20,23:10,961
-easyJet,21:20,23:10,990
-easyJet,20:35,22:25,1013
-easyJet,21:20,23:10,1018
-easyJet,20:35,22:25,1018
-easyJet,20:35,22:25,1048
-easyJet,20:35,22:25,1075
-easyJet,21:20,23:10,1153
-easyJet,15:10,17:00,1164
-easyJet,15:10,17:00,1169
-Transavia France,20:55,22:50,1172
-easyJet,15:10,17:00,1199
-easyJet,20:35,22:25,1214
-easyJet,15:10,17:00,1226
-Lufthansa,19:00,23:00,1065
-Ryanair,12:00,16:45,1124
-Lufthansa,14:40,18:05,1104
-Ryanair,12:00,16:45,1129
-Transavia France,20:55,22:50,1250
-Transavia France,20:55,22:50,1256
-Lufthansa,09:40,13:30,1104
-Austrian Airlines,19:10,22:15,21:05,09:05,1268
-Austrian Airlines,06:40,10:35,21:05,09:05,1268
-Austrian Airlines,19:10,22:15,19:40,09:05,1258
-Austrian Airlines,13:20,17:50,21:05,09:05,1268
-Austrian Airlines,06:40,10:35,19:40,09:05,1258
-Austrian Airlines,19:10,22:15,18:35,09:05,1258
-Austrian Airlines,13:20,17:50,19:40,09:05,1258
-Lufthansa,19:15,22:40,19:55,01:10,1636
-Austrian Airlines,06:40,10:35,18:35,09:05,1258
-Austrian Airlines,13:20,18:55,19:40,09:05,1258
-Austrian Airlines,19:10,22:15,21:05,09:05,1268
-Austrian Airlines,06:40,10:35,21:05,09:05,1268
-Austrian Airlines,19:10,22:15,19:40,09:05,1258
-Austrian Airlines,13:20,17:50,21:05,09:05,1268
-Austrian Airlines,06:40,10:35,19:40,09:05,1258
-Austrian Airlines,19:10,22:15,18:35,09:05,1258
-Austrian Airlines,13:20,17:50,19:40,09:05,1258
-Lufthansa,19:15,22:40,19:55,01:10,1636
-Austrian Airlines,06:40,10:35,18:35,09:05,1258
-Austrian Airlines,13:20,18:55,19:40,09:05,1258
-Austrian Airlines,13:20,17:50,18:35,09:05,1258
-Austrian Airlines,19:10,22:15,17:05,09:05,1258
-Lufthansa,19:15,22:40,19:00,01:10,1637
-Austrian Airlines,06:40,12:30,19:40,09:05,1258
-Austrian Airlines,06:40,10:35,17:05,09:05,1258
-Austrian Airlines,13:20,18:55,18:35,09:05,1258
-Austrian Airlines,06:40,12:30,18:35,09:05,1258
-Austrian Airlines,13:20,20:20,19:40,09:05,1258
-Lufthansa,19:15,22:40,11:00,18:30,1637
-Austrian Airlines,13:20,17:50,17:05,09:05,1258
-Austrian Airlines,06:40,14:25,19:40,09:05,1258
-Austrian Airlines,19:10,22:15,19:00,01:10,1734
-Lufthansa,06:00,10:10,19:55,01:10,1731
+Lufthansa,15:45,19:15,11:15,14:55,971,berlin-germany,paris-france,2024-12-20,2024-12-30
+easyJet,07:25,09:20,06:40,08:25,1125,berlin-germany,paris-france,2024-12-20,2024-12-30
+Lufthansa,19:00,23:00,11:15,14:55,971,berlin-germany,paris-france,2024-12-20,2024-12-30
+easyJet,07:25,09:20,21:10,22:55,1139,berlin-germany,paris-france,2024-12-20,2024-12-30
+easyJet,07:25,09:20,09:20,11:05,1139,berlin-germany,paris-france,2024-12-20,2024-12-30
+Lufthansa,07:10,10:25,11:15,14:55,1010,berlin-germany,paris-france,2024-12-20,2024-12-30
+Lufthansa,18:40,22:35,11:15,14:55,1010,berlin-germany,paris-france,2024-12-20,2024-12-30
+Transavia France,20:00,21:55,07:15,09:05,1162,berlin-germany,paris-france,2024-12-20,2024-12-30
+Lufthansa,06:25,10:25,11:15,14:55,1010,berlin-germany,paris-france,2024-12-20,2024-12-30
+Lufthansa,15:45,19:15,11:15,16:55,971,berlin-germany,paris-france,2024-12-20,2024-12-30
+easyJet,21:25,23:15,06:40,08:25,1197,berlin-germany,paris-france,2024-12-20,2024-12-30
+easyJet,21:25,23:15,21:10,22:55,1211,berlin-germany,paris-france,2024-12-20,2024-12-30
+easyJet,21:25,23:15,09:20,11:05,1211,berlin-germany,paris-france,2024-12-20,2024-12-30
+Lufthansa,19:00,23:00,11:15,16:55,971,berlin-germany,paris-france,2024-12-20,2024-12-30
+Transavia France,20:00,21:55,06:40,08:25,1215,berlin-germany,paris-france,2024-12-20,2024-12-30
+Lufthansa,07:10,10:25,11:15,16:55,1010,berlin-germany,paris-france,2024-12-20,2024-12-30
+Lufthansa,15:45,19:15,11:15,17:55,972,berlin-germany,paris-france,2024-12-20,2024-12-30
+Transavia France,20:00,21:55,09:20,11:05,1231,berlin-germany,paris-france,2024-12-20,2024-12-30
+Transavia France,20:00,21:55,21:10,22:55,1231,berlin-germany,paris-france,2024-12-20,2024-12-30
+Lufthansa,14:40,18:10,11:15,14:55,1104,berlin-germany,paris-france,2024-12-20,2024-12-30
+Lufthansa,18:40,22:35,11:15,16:55,1010,berlin-germany,paris-france,2024-12-20,2024-12-30
+easyJet,09:00,10:50,06:40,08:25,1249,berlin-germany,paris-france,2024-12-20,2024-12-30
+Lufthansa,06:25,10:25,11:15,16:55,1010,berlin-germany,paris-france,2024-12-20,2024-12-30

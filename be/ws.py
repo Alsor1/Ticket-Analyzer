@@ -80,19 +80,26 @@ def scrape_flights(origin, destination, departure_date, return_date):
     return flights
 
 # Function to save data to CSV
-def save_to_csv(flight_data):
+def save_to_csv(flight_data, origin, destination, departure_date, return_date):
     file_name = 'flights.csv'
     file_exists = os.path.exists(file_name)
     
+    for flight in flight_data:
+        flight['origin'] = origin
+        flight['destination'] = destination
+        flight['departure_date'] = departure_date
+        flight['return_date'] = return_date
+
     # Open CSV file in append mode
     with open(file_name, mode='a', newline='', encoding='utf-8') as file:
-        writer = csv.DictWriter(file, fieldnames=['airline', 'departure_time', 'arrival_time', 'return_departure_time', 'return_arrival_time', 'price'])
-        
+        writer = csv.DictWriter(file, fieldnames=['airline', 'departure_time', 'arrival_time', 'return_departure_time', 'return_arrival_time', 'price', 'origin', 'destination', 'departure_date', 'return_date'])
+
         # Write the header only if the file does not exist
         if not file_exists:
             writer.writeheader()
-        
+
         # Write flight data
+        print(flight_data)
         writer.writerows(flight_data)
 
 # Flask route to handle scraping
@@ -109,7 +116,7 @@ def scrape():
 
     flights = scrape_flights(origin, destination, departure_date, return_date)
     if flights:
-        save_to_csv(flights)
+        save_to_csv(flights, origin, destination, departure_date, return_date)
         return jsonify({'success': True, 'flights': flights})
     return jsonify({'success': False, 'error': 'No flights found.'})
 
