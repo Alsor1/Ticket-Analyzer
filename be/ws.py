@@ -21,55 +21,79 @@ def setup_browser():
     driver = webdriver.Chrome(options=chrome_options)
     return driver
 
-# Function to scrape flight data
 def scrape_flights(origin, destination, departure_date, return_date):
+    # Set up the browser and navigate to Kiwi.com
     driver = setup_browser()
+
+    # Navigate to the Kiwi flight search page
     url = f"https://www.kiwi.com/en/search/results/{origin}/{destination}/{departure_date}/{return_date}"
     driver.get(url)
+
+    # Wait for the page to load
     time.sleep(5)
 
-    try:
-        driver.find_element(By.XPATH, '//*[@id="cookies_accept"]').click()
-    except Exception as e:
-        print("Cookie accept button not found:", e)
+    # Click the search button (use sleep to wait for the page to load results)
+    driver.find_element(By.XPATH, '//*[@id="cookies_accept"]').click()
+    time.sleep(10)
 
-    time.sleep(10)  # Wait for results to load
-    try:
-        load_more_button = driver.find_element(By.XPATH, '//button[contains(text(), "Load more")]')
-        load_more_button.click()
-        time.sleep(5)
-    except Exception as e:
-        print("Load more button not found:", e)
-
-    soup = BeautifulSoup(driver.page_source, 'html.parser')
-    flights = []
-    for flight in soup.find_all('div', {'data-test': 'ResultCardWrapper'}):
+    for _ in range(2):
         try:
+            load_more_button = driver.find_element(By.XPATH, '//*[@id="react-view"]/div[2]/div[4]/div/div/div/div/div/div[3]/div/div/div[4]/div/div/button/div')
+            load_more_button.click()
+            time.sleep(5)  # Wait for the next set of results to load
+        except Exception as e:
+            print("Could not find the 'Load more' button:", e)
+            break
+
+    # Parse the page with BeautifulSoup
+    soup = BeautifulSoup(driver.page_source, 'html.parser')
+
+    # Scrape the flight data (adjust the tags as needed for better accuracy)
+    flights = []
+    for flight in soup.find_all('div', {'data-test': 'ResultCardWrapper'}):  # Adjust the class name if necessary
+        try:
+            flight_info = {}
+
+            # Airline
             airline = flight.find('div', {'class': 'orbit-carrier-logo'}).find('img')['title']
+            print(airline)
+            flight_info['airline'] = airline
             times = flight.find_all('div', {'data-test': 'TripTimestamp'})
-            price = flight.find('div', {'data-test': 'ResultCardPrice'}).find('span').text.strip()
-            flight_info = {
-                'airline': airline,
-                'departure_time': times[0].text.strip() if len(times) > 0 else 'N/A',
-                'arrival_time': times[1].text.strip() if len(times) > 1 else 'N/A',
-                'price': re.sub(r'[^\d]', '', price)
-            }
+            if len(times) >= 4:
+                # Ensure we have at least 4 timestamps (departure, arrival, return departure, return arrival)
+                flight_info['departure_time'] = times[0].find('time').text.strip() if times[0] else 'N/A'
+                flight_info['arrival_time'] = times[1].find('time').text.strip() if times[1] else 'N/A'
+                flight_info['return_departure_time'] = times[2].find('time').text.strip() if times[2] else 'N/A'
+                flight_info['return_arrival_time'] = times[3].find('time').text.strip() if times[3] else 'N/A'
+            # Price
+            price = flight.find('div', {'data-test': 'ResultCardPrice'}).find('span').get_text(strip=True)
+            priceFIN = re.sub(r'[^\d]', '', price)
+            flight_info['price'] = (int) (priceFIN)
+
             flights.append(flight_info)
         except Exception as e:
-            print("Error scraping flight data:", e)
+            print(f"Error parsing a flight: {e}")
 
+    # Close the browser
     driver.quit()
+
     return flights
 
-# Save data to CSV
-def save_to_csv(flights):
+# Function to save data to CSV
+def save_to_csv(flight_data):
     file_name = 'flights.csv'
     file_exists = os.path.exists(file_name)
+    
+    # Open CSV file in append mode
     with open(file_name, mode='a', newline='', encoding='utf-8') as file:
-        writer = csv.DictWriter(file, fieldnames=['airline', 'departure_time', 'arrival_time', 'price'])
+        writer = csv.DictWriter(file, fieldnames=['airline', 'departure_time', 'arrival_time', 'return_departure_time', 'return_arrival_time', 'price'])
+        
+        # Write the header only if the file does not exist
         if not file_exists:
             writer.writeheader()
-        writer.writerows(flights)
+        
+        # Write flight data
+        writer.writerows(flight_data)
 
 # Flask route to handle scraping
 @app.route('/scrape', methods=['POST'])
