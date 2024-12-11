@@ -1,5 +1,5 @@
 document.getElementById('ticket-form').addEventListener('submit', async function (e) {
-    e.preventDefault();  // Prevent the form from submitting and refreshing the page
+    e.preventDefault();
 
     const origin = document.getElementById('origin').value.trim();
     const destination = document.getElementById('destination').value.trim();
