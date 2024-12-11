@@ -9,6 +9,7 @@ import re
 import os
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+from datetime import date
 
 app = Flask(__name__)
 CORS(app)
@@ -89,17 +90,17 @@ def save_to_csv(flight_data, origin, destination, departure_date, return_date):
         flight['destination'] = destination
         flight['departure_date'] = departure_date
         flight['return_date'] = return_date
+        flight['recorded_at'] = date.today()
 
     # Open CSV file in append mode
     with open(file_name, mode='a', newline='', encoding='utf-8') as file:
-        writer = csv.DictWriter(file, fieldnames=['airline', 'departure_time', 'arrival_time', 'return_departure_time', 'return_arrival_time', 'price', 'origin', 'destination', 'departure_date', 'return_date'])
+        writer = csv.DictWriter(file, fieldnames=['airline', 'departure_time', 'arrival_time', 'return_departure_time', 'return_arrival_time', 'price', 'origin', 'destination', 'departure_date', 'return_date', 'recorded_at'])
 
         # Write the header only if the file does not exist
         if not file_exists:
             writer.writeheader()
 
         # Write flight data
-        print(flight_data)
         writer.writerows(flight_data)
 
 # Flask route to handle scraping
