@@ -87,7 +87,18 @@ form input:focus {
     background-color: #eaf6fd;
     color: #2c3e50;
     font-size: 1rem;
-    display: none;
+    display: none; /* Initially hidden until results are available */
+}
+
+.error {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #e74c3c;
+    border-radius: 8px;
+    background-color: #fceae9;
+    color: #c0392b;
+    font-size: 1rem;
+    display: none; /* Initially hidden until an error occurs */
 }
 
 @media (max-width: 600px) {
