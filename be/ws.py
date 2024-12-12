@@ -14,6 +14,7 @@ from datetime import date
 app = Flask(__name__)
 CORS(app)
 
+
 # Function to setup the browser
 def setup_browser():
     chrome_options = Options()
@@ -21,6 +22,7 @@ def setup_browser():
     chrome_options.add_argument("--disable-gpu")
     driver = webdriver.Chrome(options=chrome_options)
     return driver
+
 
 def scrape_flights(origin, destination, departure_date, return_date):
     # Set up the browser and navigate to Kiwi.com
@@ -39,7 +41,8 @@ def scrape_flights(origin, destination, departure_date, return_date):
 
     for _ in range(2):
         try:
-            load_more_button = driver.find_element(By.XPATH, '//*[@id="react-view"]/div[2]/div[4]/div/div/div/div/div/div[3]/div/div/div[4]/div/div/button/div')
+            load_more_button = driver.find_element(By.XPATH,
+                                                   '//*[@id="react-view"]/div[2]/div[4]/div/div/div/div/div/div[3]/div/div/div[4]/div/div/button/div')
             load_more_button.click()
             time.sleep(5)  # Wait for the next set of results to load
         except Exception as e:
@@ -69,7 +72,7 @@ def scrape_flights(origin, destination, departure_date, return_date):
             # Price
             price = flight.find('div', {'data-test': 'ResultCardPrice'}).find('span').get_text(strip=True)
             priceFIN = re.sub(r'[^\d]', '', price)
-            flight_info['price'] = (int) (priceFIN)
+            flight_info['price'] = (int)(priceFIN)
 
             flights.append(flight_info)
         except Exception as e:
@@ -80,11 +83,12 @@ def scrape_flights(origin, destination, departure_date, return_date):
 
     return flights
 
+
 # Function to save data to CSV
 def save_to_csv(flight_data, origin, destination, departure_date, return_date):
     file_name = 'flights.csv'
     file_exists = os.path.exists(file_name)
-    
+
     for flight in flight_data:
         flight['origin'] = origin
         flight['destination'] = destination
@@ -94,7 +98,9 @@ def save_to_csv(flight_data, origin, destination, departure_date, return_date):
 
     # Open CSV file in append mode
     with open(file_name, mode='a', newline='', encoding='utf-8') as file:
-        writer = csv.DictWriter(file, fieldnames=['airline', 'departure_time', 'arrival_time', 'return_departure_time', 'return_arrival_time', 'price', 'origin', 'destination', 'departure_date', 'return_date', 'recorded_at'])
+        writer = csv.DictWriter(file, fieldnames=['recorded_at', 'airline', 'departure_time', 'arrival_time',
+                                                  'return_departure_time', 'return_arrival_time', 'price', 'origin',
+                                                  'destination', 'departure_date', 'return_date'])
 
         # Write the header only if the file does not exist
         if not file_exists:
@@ -102,6 +108,7 @@ def save_to_csv(flight_data, origin, destination, departure_date, return_date):
 
         # Write flight data
         writer.writerows(flight_data)
+
 
 # Flask route to handle scraping
 @app.route('/scrape', methods=['POST'])
@@ -120,6 +127,7 @@ def scrape():
         save_to_csv(flights, origin, destination, departure_date, return_date)
         return jsonify({'success': True, 'flights': flights})
     return jsonify({'success': False, 'error': 'No flights found.'})
+
 
 if __name__ == "__main__":
     app.run(debug=True)
