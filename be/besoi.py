@@ -7,6 +7,9 @@ import time
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 from bs4 import BeautifulSoup
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
@@ -68,19 +71,19 @@ y_pred = model.predict(X_test)
 mae = mean_absolute_error(y_test, y_pred)
 print(f"Mean Absolute Error: {mae:.2f} €")
 
+
 # Function to predict the best time to buy
 def predict_best_time(origin, destination, departure_date, return_date, airline=None):
     """
     Predicts the best time to buy a ticket based on future price trends.
     """
-    # Check if the origin and destination are in the encoder's classes
     if origin not in encoder.classes_:
-        origin_encoded = -1  # Or assign any default value
+        origin_encoded = -1
     else:
         origin_encoded = encoder.transform([origin])[0]
 
     if destination not in encoder.classes_:
-        destination_encoded = -1  # Or assign any default value
+        destination_encoded = -1
     else:
         destination_encoded = encoder.transform([destination])[0]
 
@@ -90,7 +93,6 @@ def predict_best_time(origin, destination, departure_date, return_date, airline=
     future_prices = []
     future_dates = []
 
-    # Simulate price predictions for days leading up to departure
     for days_before in range(1, 61):  # Look at prices up to 60 days before departure
         info_date = departure_date - timedelta(days=days_before)
         if info_date < datetime.now():
@@ -109,7 +111,6 @@ def predict_best_time(origin, destination, departure_date, return_date, airline=
         future_prices.append(predicted_price)
         future_dates.append(info_date)
 
-    # Find the date with the lowest predicted price
     optimal_index = np.argmin(future_prices)
     optimal_date = future_dates[optimal_index]
     optimal_price = future_prices[optimal_index]
@@ -126,50 +127,44 @@ def setup_browser():
 
 
 def scrape_flights(origin, destination, departure_date, return_date):
-    # Set up the browser and navigate to Kiwi.com
     driver = setup_browser()
 
     # Navigate to the Kiwi flight search page
     url = f"https://www.kiwi.com/en/search/results/{origin}/{destination}/{departure_date}/{return_date}"
     driver.get(url)
 
-    # Wait for the page to load
-    time.sleep(5)
+    try:
+        WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, '//*[@id="cookies_accept"]'))
+        ).click()
+    except TimeoutException:
+        print("Cookies accept button not found.")
 
-    # Click the search button (use sleep to wait for the page to load results)
-    driver.find_element(By.XPATH, '//*[@id="cookies_accept"]').click()
-    time.sleep(10)
+    WebDriverWait(driver, 15).until(
+        EC.presence_of_element_located((By.XPATH, '//*[@data-test="ResultCardWrapper"]'))
+    )
 
     for _ in range(2):
         try:
-            load_more_button = driver.find_element(By.XPATH, '//*[@id="react-view"]/div[2]/div[4]/div/div/div/div/div/div[3]/div/div/div[4]/div/div/button/div')
+            load_more_button = WebDriverWait(driver, 20).until(  # Increased wait time from 10 to 20 seconds
+                EC.element_to_be_clickable((By.XPATH,
+                                            '//*[@id="react-view"]/div[2]/div[4]/div/div/div/div/div/div[3]/div/div/div[4]/div/div/button/div'))
+            )
             load_more_button.click()
-            time.sleep(5)  # Wait for the next set of results to load
-        except Exception as e:
-            print("Could not find the 'Load more' button:", e)
+            time.sleep(5)
+        except TimeoutException:
+            print("Load More button not found or not clickable.")
             break
 
-    # Parse the page with BeautifulSoup
     soup = BeautifulSoup(driver.page_source, 'html.parser')
 
     flights = []
     for flight in soup.find_all('div', {'data-test': 'ResultCardWrapper'}):
         try:
             flight_info = {}
-
-            # Info Taken Date (extract the date in the middle column, if it's part of the scraped data)
-            # Replace 'your-class-for-info-date' with the actual class name or structure
-            info_taken_date = flight.find('div', {'class': 'your-class-for-info-date'})  # Adjust class
-            if info_taken_date:
-                flight_info['Info Taken Date'] = info_taken_date.text.strip()  # Extract the correct date from middle column
-            else:
-                flight_info['Info Taken Date'] = datetime.now().strftime('%Y-%m-%d')  # Default to today's date if not found
-
-            # Airline
             airline = flight.find('div', {'class': 'orbit-carrier-logo'}).find('img')['title']
             flight_info['airline'] = airline
 
-            # Departure and return times
             times = flight.find_all('div', {'data-test': 'TripTimestamp'})
             if len(times) >= 4:
                 flight_info['departure_time'] = times[0].find('time').text.strip() if times[0] else 'N/A'
@@ -177,12 +172,10 @@ def scrape_flights(origin, destination, departure_date, return_date):
                 flight_info['return_departure_time'] = times[2].find('time').text.strip() if times[2] else 'N/A'
                 flight_info['return_arrival_time'] = times[3].find('time').text.strip() if times[3] else 'N/A'
 
-            # Price
             price = flight.find('div', {'data-test': 'ResultCardPrice'}).find('span').get_text(strip=True)
             priceFIN = re.sub(r'[^\d]', '', price)
             flight_info['price'] = int(priceFIN)
 
-            # Add missing columns and use .split('-')[0].capitalize() for cities
             flight_info['Departure City'] = origin.split('-')[0].capitalize()
             flight_info['Destination City'] = destination.split('-')[0].capitalize()
             flight_info['Departure Date'] = departure_date
@@ -203,18 +196,15 @@ if __name__ == "__main__":
     departure_date = "2025-06-16"
     return_date = "2025-06-27"
 
-    # Scrape flight data
     print("Scraping flights...")
     flights = scrape_flights(origin, destination, departure_date, return_date)
 
     if flights:
         print(f"Scraped {len(flights)} flights.")
-        # Append scraped flights to the existing CSV file
         df_flights = pd.DataFrame(flights)
         df_flights.to_csv('final.csv', mode='a', header=False, index=False)
         print("Data appended to final.csv.")
 
-    # Predict the best time to buy a ticket based on the ML model
     print("\nPredicting the best time to buy...")
     best_time, predicted_price = predict_best_time(origin, destination, departure_date, return_date)
 
