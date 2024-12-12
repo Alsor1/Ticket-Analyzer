@@ -14,47 +14,37 @@ from datetime import date
 app = Flask(__name__)
 CORS(app)
 
-# Load the dataset
-data = pd.read_csv("flights_final.csv")
+data = pd.read_csv("final.csv")
 
-# Feature Engineering
 data['Info Taken Date'] = pd.to_datetime(data['Info Taken Date'])
 data['Departure Date'] = pd.to_datetime(data['Departure Date'])
 data['Return Date'] = pd.to_datetime(data['Return Date'])
 
-# Days until departure
 data['Days Until Departure'] = (data['Departure Date'] - data['Info Taken Date']).dt.days
 
-# Day of the week for info and departure dates
 data['Info Day of Week'] = data['Info Taken Date'].dt.dayofweek
 data['Departure Day of Week'] = data['Departure Date'].dt.dayofweek
 
-# Encode categorical variables
 encoder = LabelEncoder()
 data['Airline'] = encoder.fit_transform(data['Airline'])
 data['Departure City'] = encoder.fit_transform(data['Departure City'])
 data['Destination City'] = encoder.fit_transform(data['Destination City'])
 
-# Features and target
 features = ['Airline', 'Departure City', 'Destination City', 'Days Until Departure', 'Info Day of Week', 'Departure Day of Week']
 target = 'Price (€)'
 
 X = data[features]
 y = data[target]
 
-# Split the dataset
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Train a Random Forest Regressor
 model = RandomForestRegressor(n_estimators=100, random_state=42)
 model.fit(X_train, y_train)
 
-# Evaluate the model
 y_pred = model.predict(X_test)
 mae = mean_absolute_error(y_test, y_pred)
 print(f"Mean Absolute Error: {mae:.2f} €")
 
-# Function to predict the best time to buy
 def predict_best_time(origin, destination, departure_date, return_date, airline=None):
     """
     Predicts the best time to buy a ticket based on future price trends.
@@ -76,8 +66,7 @@ def predict_best_time(origin, destination, departure_date, return_date, airline=
     future_prices = []
     future_dates = []
     
-    # Simulate price predictions for days leading up to departure
-    for days_before in range(1, 61):  # Look at prices up to 60 days before departure
+    for days_before in range(1, 61):
         info_date = departure_date - timedelta(days=days_before)
         if info_date < datetime.now():
             continue
@@ -95,14 +84,12 @@ def predict_best_time(origin, destination, departure_date, return_date, airline=
         future_prices.append(predicted_price)
         future_dates.append(info_date)
     
-    # Find the date with the lowest predicted price
     optimal_index = np.argmin(future_prices)
     optimal_date = future_dates[optimal_index]
     optimal_price = future_prices[optimal_index]
     
     return optimal_date, optimal_price
 
-# Example usage
 @app.route('/predict', methods=['POST'])
 def scrape():
     data = request.json
@@ -110,7 +97,7 @@ def scrape():
     destination = data.get('destination').split('-')[0].capitalize()
     departure_date = data.get('departure_date')
     return_date = data.get('return_date')
-    airline = None  # Optional: specify an airline
+    airline = None
 
     if not all([origin, destination, departure_date, return_date]):
         return jsonify({'error': 'Missing required fields'}), 400

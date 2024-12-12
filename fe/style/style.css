@@ -12,7 +12,6 @@ h1 {
   margin: 20px 0;
 }
 
-/* Main Container */
 .container {
   max-width: 600px;
   margin: 30px auto;
@@ -87,7 +86,7 @@ form input:focus {
   background-color: #eaf6fd;
   color: #2c3e50;
   font-size: 1rem;
-  display: none; /* Initially hidden until results are available */
+  display: none;
 }
 
 .error {
@@ -98,7 +97,7 @@ form input:focus {
   background-color: #fceae9;
   color: #c0392b;
   font-size: 1rem;
-  display: none; /* Initially hidden until an error occurs */
+  display: none;
 }
 
 @media (max-width: 600px) {
@@ -145,31 +144,31 @@ form input:focus {
   transition: background-color 0.3s ease;
 }
 .modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1000; /* Sit on top */
+  display: none;
+  position: fixed;
+  z-index: 1000;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  overflow: hidden; /* Disable scrolling in the modal */
-  background-color: rgba(0, 0, 0, 0.5); /* Black background with transparency */
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .modal-content {
   background-color: #fefefe;
-  margin: auto; /* Center in the page */
+  margin: auto;
   padding: 20px;
   border: 1px solid #888;
-  width: 80%; /* Width of the modal */
-  max-width: 600px; /* Ensure it doesn’t exceed a comfortable width */
+  width: 80%;
+  max-width: 600px;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: relative;
   top: 50%;
-  transform: translateY(-50%); /* Center vertically */
-  max-height: 90vh; /* Prevent content from exceeding the viewport height */
-  overflow-y: auto; /* Allow scrolling only if content overflows */
+  transform: translateY(-50%);
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .close-button {
@@ -219,5 +218,5 @@ form input:focus {
   color: #e67e22;
 }
 body.modal-open {
-  overflow: hidden; /* Disable page scrolling when modal is open */
+  overflow: hidden;
 }

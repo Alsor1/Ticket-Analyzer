@@ -21,7 +21,6 @@ document
     }
 
     try {
-      // Use the POST method to send data to the Flask server
       const response = await fetch("http://127.0.0.1:5000/scrape", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -36,7 +35,6 @@ document
 
       if (result.success) {
         const flights = result.flights;
-        // Display the list of flights
         resultDiv.innerHTML = `
                 <h3>Available Flights:</h3>
                 <ul>${flights
@@ -47,12 +45,10 @@ document
             `;
         resultDiv.style.display = "block";
       } else {
-        // Display any errors from the server
         errorDiv.innerHTML = `<p><strong>Error:</strong> ${result.error}</p>`;
         errorDiv.style.display = "block";
       }
     } catch (error) {
-      // Handle errors during the fetch process
       errorDiv.innerHTML = `<p><strong>Error:</strong> Could not connect to the server.</p>`;
       errorDiv.style.display = "block";
     }
@@ -64,15 +60,13 @@ document.addEventListener("DOMContentLoaded", function () {
   const errorDiv = document.getElementById("error");
 
   mlButton.addEventListener("click", async function (event) {
-    event.preventDefault(); // Prevent form submission
+    event.preventDefault();
 
-    // Get form values
     const origin = document.getElementById("origin").value;
     const destination = document.getElementById("destination").value;
     const departureDate = document.getElementById("departure-date").value;
     const returnDate = document.getElementById("arrival-date").value;
 
-    // Validate inputs
     if (!origin || !destination || !departureDate || !returnDate) {
       errorDiv.textContent = "Please fill in all fields";
       errorDiv.style.display = "block";
@@ -81,7 +75,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     try {
-      // Send request to backend
       const response = await fetch("http://localhost:5000/predict", {
         method: "POST",
         headers: {
@@ -101,7 +94,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const data = await response.json();
 
-      // Display results
       resultDiv.innerHTML = `
                 <p><strong>Best Time to Buy:</strong> ${
                   data.best_time_to_buy
@@ -121,22 +113,18 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-// Modal functionality
 const helpButton = document.getElementById("help-button");
 const helpModal = document.getElementById("help-modal");
 const closeHelp = document.getElementById("close-help");
 
-// Show modal
 helpButton.addEventListener("click", () => {
   helpModal.style.display = "block";
 });
 
-// Close modal
 closeHelp.addEventListener("click", () => {
   helpModal.style.display = "none";
 });
 
-// Close modal when clicking outside the modal content
 window.addEventListener("click", (event) => {
   if (event.target === helpModal) {
     helpModal.style.display = "none";
