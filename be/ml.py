@@ -7,6 +7,12 @@ from sklearn.metrics import mean_absolute_error
 import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 import random
+from flask import Flask, jsonify, request
+from flask_cors import CORS
+from datetime import date
+
+app = Flask(__name__)
+CORS(app)
 
 # Load the dataset
 data = pd.read_csv("flights_final.csv")
@@ -97,11 +103,20 @@ def predict_best_time(origin, destination, departure_date, return_date, airline=
     return optimal_date, optimal_price
 
 # Example usage
-origin = "Madrid"
-destination = "Paris"
-departure_date = "2025-06-15"
-return_date = "2025-06-24"
-airline = None  # Optional: specify an airline
+@app.route('/predict', methods=['POST'])
+def scrape():
+    data = request.json
+    origin = data.get('origin').split('-')[0].capitalize()
+    destination = data.get('destination').split('-')[0].capitalize()
+    departure_date = data.get('departure_date')
+    return_date = data.get('return_date')
+    airline = None  # Optional: specify an airline
 
-optimal_date, optimal_price = predict_best_time(origin, destination, departure_date, return_date, airline)
-print(f"Optimal Date to Buy: {optimal_date.strftime('%Y-%m-%d')}, Predicted Price: {optimal_price:.2f} €")
+    if not all([origin, destination, departure_date, return_date]):
+        return jsonify({'error': 'Missing required fields'}), 400
+    
+    flights = predict_best_time(origin, destination, departure_date, return_date, airline)
+    return jsonify({'best_time_to_buy': flights[0].strftime('%Y-%m-%d'), 'predicted_price': flights[1]})
+
+if __name__ == '__main__':
+    app.run(debug=True)
