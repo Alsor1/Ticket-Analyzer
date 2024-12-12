@@ -15,7 +15,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Load the dataset
-data = pd.read_csv("flights_final.csv")
+data = pd.read_csv("final.csv")
 
 # Feature Engineering
 data['Info Taken Date'] = pd.to_datetime(data['Info Taken Date'])
