@@ -1,50 +1,105 @@
-<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Plane Ticket Analyzer</title>
-    <link rel="stylesheet" href="style/style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="style/style.css" />
+    <script src="script/script.js" defer></script>
+  </head>
+  <body>
     <h1>Plane Ticket Analyzer</h1>
-
+    <div class="help-div">
+      <button class="help-button" id="help-button">Help</button>
+    </div>
     <div class="container">
-        <h2>What flight would you like to analyze?</h2>
-        <form id="ticket-form">
-            <!-- Departure Information Group -->
-            <fieldset class="form-group">
-                <legend>Departure Information</legend>
-                <label for="origin">Departure Airport:</label>
-                <input type="text" id="origin" name="origin" placeholder="Enter departure airport" required>
+      <h2>What flight would you like to analyze?</h2>
+      <form id="ticket-form">
+        <!-- Departure Information Group -->
+        <fieldset class="form-group">
+          <legend>Departure Information</legend>
+          <label for="origin">Departure Airport:</label>
+          <input
+            type="text"
+            id="origin"
+            name="origin"
+            placeholder="Enter departure airport"
+            required
+          />
 
-                <label for="departure-date">Departure Date:</label>
-                <input type="date" id="departure-date" name="departure-date" required>
-            </fieldset>
+          <label for="departure-date">Departure Date:</label>
+          <input
+            type="date"
+            id="departure-date"
+            name="departure-date"
+            required
+          />
+        </fieldset>
 
-            <!-- Arrival Information Group -->
-            <fieldset class="form-group">
-                <legend>Arrival Information</legend>
-                <label for="destination">Destination Airport:</label>
-                <input type="text" id="destination" name="destination" placeholder="Enter destination airport" required>
+        <!-- Arrival Information Group -->
+        <fieldset class="form-group">
+          <legend>Arrival Information</legend>
+          <label for="destination">Destination Airport:</label>
+          <input
+            type="text"
+            id="destination"
+            name="destination"
+            placeholder="Enter destination airport"
+            required
+          />
 
-                <label for="arrival-date">Arrival Date:</label>
-                <input type="date" id="arrival-date" name="arrival-date" required>
-            </fieldset>
+          <label for="arrival-date">Arrival Date:</label>
+          <input type="date" id="arrival-date" name="arrival-date" required />
+        </fieldset>
 
-            <div class="button-group">
-                <input type="submit" value="Analyze" id="analyze-button">
-                <button type="button" id="ml-button">When to buy?</button>
-            </div>
-        </form>
+        <div class="button-group">
+          <input type="submit" value="Analyze" id="analyze-button" />
+          <button type="button" id="ml-button">When to buy?</button>
+        </div>
+      </form>
 
-        <!-- Output Section -->
-        <div id="result" class="result"></div>
-        <!-- Error Message Section -->
-        <div id="error" class="error"></div>
+      <!-- Output Section -->
+      <div id="result" class="result"></div>
+      <!-- Error Message Section -->
+      <div id="error" class="error"></div>
     </div>
 
-    <script src="script/script.js"></script>
-    <script src="script/new-script.js"></script>
-</body>
+    <!-- Help Modal -->
+    <div id="help-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-button" id="close-help">&times;</span>
+        <h3>How to Use the Plane Ticket Analyzer</h3>
+        <p>Follow these steps to get started with the app:</p>
+        <ol>
+          <li><strong>Start the Web Scraper:</strong></li>
+          <p>
+            Open a terminal and navigate to the <code>be</code> folder. Then,
+            type: <code>python ws.py</code><br />
+            <em>Note:</em> Ensure Python 3 is installed on your system.
+          </p>
+          <li><strong>Start the Analysis Tool:</strong></li>
+          <p>
+            Open another terminal and navigate to the <code>be</code> folder.
+            Then, type: <code>python ml.py</code><br />
+            <em>Note:</em> Ensure Python 3 is installed on your system.
+          </p>
+          <li><strong>Input Guidelines:</strong></li>
+          <p>
+            - The data input is <strong>not case sensitive</strong>, so you can
+            type locations in any capitalization.<br />
+            - Use the format: <code>City-Country</code> (e.g.,
+            <code>paris-france</code>).
+          </p>
+          <li><strong>Date Selection:</strong></li>
+          <p>
+            - Ensure the selected dates are valid.<br />
+            - Dates in the past will result in an error.
+          </p>
+        </ol>
+        <p>
+          If you encounter any issues, double-check the instructions above or
+          contact support for assistance.
+        </p>
+      </div>
+    </div>
+  </body>
 </html>
